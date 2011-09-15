@@ -1,0 +1,51 @@
+.block .mooprofileblock {
+    overflow: hidden;
+}
+.block .mooprofileblock .desc {
+    border-bottom: 1px solid #CCCCCC;
+    font-weight: bold;
+    padding: 3px 0;
+    text-align: center;
+}
+.block .mooprofileblock .mooprofile {
+    border-bottom: 1px solid #CCCCCC;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    padding: 5px;
+    text-align: center;
+    width: 94%;
+}
+.block .mooprofileblock .mooprofile.last {
+    border:0px none;
+}
+.block .mooprofileblock .picture {
+    overflow: hidden;
+}
+.block .mooprofileblock .fullname {
+    font-size:1.5em; 
+    font-weight: bold;
+    font-size: 130% !important;    
+    margin-bottom: 4px;
+}
+.block .mooprofileblock .email, .block .mooprofileblock .phone, .block .mooprofileblock .lastaccess {
+    text-align: left;
+    margin-bottom: 4px;
+}
+.block .mooprofileblock .email img, .block .mooprofileblock .phone img {
+    margin-right: 5px;
+    vertical-align: bottom;
+}
+.block .mooprofileblock .phone span {
+    margin-left: 5px;
+}
+.block .mooprofileblock strong {
+    margin-right: 5px;
+}
+.block .mooprofileblock  span {
+
+}
+.block .mooprofileblock .lastaccess span {
+    font-style: italic;
+    color: #666;
+}
