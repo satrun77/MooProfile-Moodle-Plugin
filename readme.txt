@@ -1,12 +1,3 @@
-/**
- * different uses for this block:
- * 
- * - show course teachers
- * - in quiz who is the marker
- * - student of the month!
- * - the winner of a compition
- */
-
 === MooProfile "Block Plugin" ===
 
 Author:    Mohamed Alsharaf (mohamed.alsharaf@gmail.com)
@@ -27,7 +18,9 @@ Version:   1.0.0
 
 == Block Usages ==
 
-List of examples on what to use this plugin for:
+List of some examples on what to use this plugin for:
 
 * Show profile(s) of the course teacher(s).
-*
+* Show profile of a quiz marker and link to support.
+* Show profile of a winner of a competition.
+* Show profile of a highest achiever.
