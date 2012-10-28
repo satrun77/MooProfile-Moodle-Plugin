@@ -36,16 +36,16 @@ class block_mooprofile_edit_form extends block_edit_form
         $mform->addElement('textarea', 'config_message', $helper->get_string('displaymessage'), array('rows' => '5', 'cols' => '60'));
 
         $repeatarray = array(
-            MoodleQuickForm::createElement('header', 'headerconfiguser', $helper->get_string('configheader_user')),
-            MoodleQuickForm::createElement('text', 'config_user', $helper->get_string('username')),
-            MoodleQuickForm::createElement('selectyesno', 'config_name', $helper->get_string('displayname')),
-            MoodleQuickForm::createElement('selectyesno', 'config_picture', $helper->get_string('displaypicture')),
-            MoodleQuickForm::createElement('selectyesno', 'config_email', $helper->get_string('displayemail')),
-            MoodleQuickForm::createElement('selectyesno', 'config_sendmessage', $helper->get_string('displaysendmessage')),
-            MoodleQuickForm::createElement('selectyesno', 'config_phone1', $helper->get_string('displayphone1')),
-            MoodleQuickForm::createElement('selectyesno', 'config_phone2', $helper->get_string('displayphone2')),
-            MoodleQuickForm::createElement('selectyesno', 'config_lastaccess', $helper->get_string('displaylastaccess')),
-            MoodleQuickForm::createElement('selectyesno', 'config_isonline', $helper->get_string('displayisonline')),
+            $mform->createElement('header', 'headerconfiguser', $helper->get_string('configheader_user')),
+            $mform->createElement('text', 'config_user', $helper->get_string('username')),
+            $mform->createElement('selectyesno', 'config_name', $helper->get_string('displayname')),
+            $mform->createElement('selectyesno', 'config_picture', $helper->get_string('displaypicture')),
+            $mform->createElement('selectyesno', 'config_email', $helper->get_string('displayemail')),
+            $mform->createElement('selectyesno', 'config_sendmessage', $helper->get_string('displaysendmessage')),
+            $mform->createElement('selectyesno', 'config_phone1', $helper->get_string('displayphone1')),
+            $mform->createElement('selectyesno', 'config_phone2', $helper->get_string('displayphone2')),
+            $mform->createElement('selectyesno', 'config_lastaccess', $helper->get_string('displaylastaccess')),
+            $mform->createElement('selectyesno', 'config_isonline', $helper->get_string('displayisonline')),
         );
 
         $repeatedoptions = array(
