@@ -21,3 +21,4 @@ $string['or'] = 'or, ';
 $string['online'] = 'User is Online';
 $string['displaysendmessage'] = 'Display send message';
 $string['sendmessage'] = 'send message';
+$string['orrole'] = 'or Role';
