@@ -4,12 +4,15 @@ Author:    Mohamed Alsharaf (mohamed.alsharaf@gmail.com)
 Website:   http://jamandcheese-on-phptoast.com
 Copyright: 2011-2012 Mohamed Alsharaf
 License:   http://www.gnu.org/copyleft/gpl.html
-Version:   1.0.2
+Version:   1.1.0
 
 == Changelog: ==
 1.0.0 - First version
 1.0.1 - Added missing data in version.php
 1.0.2 - Compatible with Moodle 2.3
+1.1.0 - New feature:
+         - The ability to display a list of users in a course
+           based on their role in that course (e.g list all teachers in a course)
 
 == Installation ==
 1. Copy and paste the folder mooprofile into the blocks directory.

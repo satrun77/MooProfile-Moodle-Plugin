@@ -54,4 +54,24 @@ class mooprofile_helper
         global $CFG;
         return $CFG->dirroot . '/blocks/' . $this->name . '/';
     }
+
+    /**
+     * Get list of site roles names
+     *
+     * @param array $exclude
+     * @return array
+     */
+    public function get_roles($exclude = array())
+    {
+        $return = array();
+
+        $roles = get_all_roles();
+        foreach ($roles as $role) {
+            if (!in_array($role->id, $exclude)) {
+                $return[$role->id] = $role->name;
+            }
+        }
+
+        return $return;
+    }
 }

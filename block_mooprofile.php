@@ -20,32 +20,34 @@ defined('MOODLE_INTERNAL') || die();
 class block_mooprofile extends block_base
 {
     protected $helper;
+    protected $usersdisplayed;
 
     public function init()
     {
         global $CFG;
-        
+
         include_once realpath(dirname(__FILE__)) . '/locallib.php';
         $this->helper = new mooprofile_helper;
         $this->title = $this->helper->get_string('pluginname');
+        $this->usersdisplayed = array();
     }
 
     /**
      * Display the content of a block
-     * 
+     *
      * @global moodle_database $DB
-     * @return object 
+     * @return object
      */
     public function get_content()
     {
-        global $DB;
-
         if ($this->content !== NULL) {
             return $this->content;
         }
 
-        // Never useful unless you are logged in as real users
-        if (!isloggedin() || isguestuser() || !isset($this->config->user) || !is_array($this->config->user)) {
+        // block visible for logged in users and if we have users or roles
+        $hasusers = isset($this->config->user) && is_array($this->config->user);
+        $hasroles = isset($this->config->role) && is_array($this->config->role);
+        if (!isloggedin() || isguestuser() || (!$hasusers && !$hasroles)) {
             return '';
         }
 
@@ -56,25 +58,82 @@ class block_mooprofile extends block_base
             $this->content->text .= '<div class="desc">' . format_text($this->config->message, FORMAT_MOODLE) . '</div>';
         }
 
-        $count = count($this->config->user) - 1;
+        // first display users based on roles in course page only
+        if ($hasroles) {
+            $this->render_roles();
+        }
+
+        // display users base on usernames in any page
+        if ($hasusers) {
+            $this->render_users();
+        }
+
+        $this->content->text .= '</div>';
+        $this->content->footer = '';
+
+        return $this->content;
+    }
+
+    /**
+     * Render a list of users based on defined usernames
+     *
+     * @global moodle_database $DB
+     * @return void
+     */
+    protected function render_users()
+    {
+        global $DB;
+
+        $userscount = count($this->config->user) - 1;
         foreach ($this->config->user as $key => $username) {
 
-            if ($username == '') {
+            // skip an empty username or a username for a profile displayed by the render_roles
+            if ($username == '' || isset($this->usersdisplayed[$username])) {
                 continue;
             }
 
-            $islast = ($key == $count) ? true : false;
+            $islast = ($key == $userscount) ? true : false;
             $user = $DB->get_record('user', array('username' => $username));
             if ($user) {
                 $this->content->text .= $this->render_user($user, $key, $islast);
             }
             unset($user);
         }
-        $this->content->text .= '</div>';
 
-        $this->content->footer = '';
+        unset($this->usersdisplayed);
+    }
 
-        return $this->content;
+    /**
+     * Render a list of users based on their role in a course
+     *
+     * @global object $SITE
+     * @global moodle_database $DB
+     * @return void
+     */
+    protected function render_roles()
+    {
+        global $SITE;
+
+        // this list only visible in a couse page
+        if ($this->page->course->id == $SITE->id) {
+            return;
+        }
+
+        $rolescount = count($this->config->role) - 1;
+        foreach ($this->config->role as $key => $roleid) {
+
+            if ($roleid == '') {
+                continue;
+            }
+
+            $islast = ($key == $rolescount) ? true : false;
+            $users = get_role_users($roleid, $this->page->context, false, 'u.*');
+            foreach ($users as $user) {
+                $this->content->text .= $this->render_user($user, $key, $islast);
+                $this->usersdisplayed[$user->username] = $user;
+            }
+            unset($users);
+        }
     }
 
     /**
@@ -85,7 +144,7 @@ class block_mooprofile extends block_base
      * @param object $user
      * @param int $key
      * @param boolean $islast
-     * @return string 
+     * @return string
      */
     protected function render_user($user, $key, $islast = false)
     {
@@ -96,16 +155,16 @@ class block_mooprofile extends block_base
         if ($this->can_display('picture', $key)) {
             $output .= '<div class="picture">';
             $output .= $OUTPUT->user_picture($user, array(
-                        'courseid' => $this->page->course->id,
-                        'size' => '100',
-                        'class' => 'profilepicture'));
+                'courseid' => $this->page->course->id,
+                'size' => '100',
+                'class' => 'profilepicture'));
             $output .= '</div>';
         }
 
         if ($this->can_display('name', $key)) {
             $output .= '<div class="fullname"><a href="' . $CFG->wwwroot . '/user/profile.php?id=' . $user->id . '">' . fullname($user) . '</a>';
             if ($this->can_display('isonline', $key)) {
-                
+
                 $timetoshowusers = 300;
                 $timefrom = 100 * floor((time()-$timetoshowusers) / 100);
                 if ($user->lastaccess > $timefrom) {
@@ -139,11 +198,11 @@ class block_mooprofile extends block_base
         if ($this->can_display('phone1', $key) && $user->phone1 != '') {
             $output .= '<div class="phone">';
             $output .= '<img src="' . $OUTPUT->pix_url('i/feedback') . '" alt="' . get_string('phone') . '"/><strong>' . get_string('phone') . ':</strong><span>' . s($user->phone1) . '<span>';
-            
+
             if ($this->can_display('phone2', $key) && $user->phone2 != '') {
                 $output .= '<strong>' . $this->helper->get_string('or') . '</strong><span>' . s($user->phone2) . '<span>';
             }
-            
+
             $output .= '</div>';
         }
 
@@ -160,9 +219,9 @@ class block_mooprofile extends block_base
 
     /**
      * Checks if a configuration settings is enabled or not for a user
-     * 
+     *
      * @param int $key
-     * @param string $name 
+     * @param string $name
      * @return boolean
      */
     protected function can_display($name, $key = 0)

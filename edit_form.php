@@ -35,9 +35,13 @@ class block_mooprofile_edit_form extends block_edit_form
 
         $mform->addElement('textarea', 'config_message', $helper->get_string('displaymessage'), array('rows' => '5', 'cols' => '60'));
 
+        $roles = $helper->get_roles();
+        array_unshift($roles, get_string('choosedots'));
+
         $repeatarray = array(
             $mform->createElement('header', 'headerconfiguser', $helper->get_string('configheader_user')),
             $mform->createElement('text', 'config_user', $helper->get_string('username')),
+            $mform->createElement('select', 'config_role', $helper->get_string('orrole'), $roles),
             $mform->createElement('selectyesno', 'config_name', $helper->get_string('displayname')),
             $mform->createElement('selectyesno', 'config_picture', $helper->get_string('displaypicture')),
             $mform->createElement('selectyesno', 'config_email', $helper->get_string('displayemail')),
@@ -48,14 +52,19 @@ class block_mooprofile_edit_form extends block_edit_form
             $mform->createElement('selectyesno', 'config_isonline', $helper->get_string('displayisonline')),
         );
 
+        // create elements for users data based on usernames
         $repeatedoptions = array(
             'config_user' => array(
-                'type' => PARAM_USERNAME
+                'type' => PARAM_USERNAME,
+                'disabledif' => array('config_role', 'neq', '0'),
             ),
             'config_email' => array(
                 'helpbutton' => array(
                     'displayemail', 'block_' . $helper->get_name()
                 )
+            ),
+            'config_role' => array(
+                'disabledif' => array('config_user', 'neq', ''),
             ),
         );
 
