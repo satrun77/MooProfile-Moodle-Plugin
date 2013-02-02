@@ -252,6 +252,14 @@ class block_mooprofile extends block_base
             $data = $this->config;
         }
 
+        if (!isset($data->user) || !is_array($data->user)) {
+            $data->user = array();
+        }
+
+        if (!isset($data->role) || !is_array($data->role)) {
+            $data->role = array();
+        }
+
         // remove empty usernames from config data
         $data->user = array_filter($data->user, function ($value) {
                     return !empty($value) || $value === 0;
