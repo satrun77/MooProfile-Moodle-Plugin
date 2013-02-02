@@ -19,8 +19,10 @@ defined('MOODLE_INTERNAL') || die();
  */
 class block_mooprofile extends block_base
 {
+
     protected $helper;
     protected $usersdisplayed;
+    protected $displayfields = array('name', 'picture', 'email', 'sendmessage', 'phone1', 'phone2', 'lastaccess', 'isonline');
 
     public function init()
     {
@@ -84,20 +86,21 @@ class block_mooprofile extends block_base
     {
         global $DB;
 
-        $userscount = count($this->config->user) - 1;
+        $userscount = count($this->config->user);
+        $i = 1;
         foreach ($this->config->user as $key => $username) {
 
-            // skip an empty username or a username for a profile displayed by the render_roles
-            if ($username == '' || isset($this->usersdisplayed[$username])) {
-                continue;
+            // skip a username for a profile displayed by the render_roles
+            if (!isset($this->usersdisplayed[$username])) {
+                $islast = ($i == $userscount) ? true : false;
+                $user = $DB->get_record('user', array('username' => $username));
+                if ($user) {
+                    $this->content->text .= $this->render_user($user, $key, $islast);
+                }
+                unset($user);
             }
 
-            $islast = ($key == $userscount) ? true : false;
-            $user = $DB->get_record('user', array('username' => $username));
-            if ($user) {
-                $this->content->text .= $this->render_user($user, $key, $islast);
-            }
-            unset($user);
+            $i++;
         }
 
         unset($this->usersdisplayed);
@@ -119,20 +122,20 @@ class block_mooprofile extends block_base
             return;
         }
 
-        $rolescount = count($this->config->role) - 1;
+        $rolescount = count($this->config->role);
+        $userscount = count($this->config->user);
+        $i = 1;
         foreach ($this->config->role as $key => $roleid) {
 
-            if ($roleid == '') {
-                continue;
-            }
-
-            $islast = ($key == $rolescount) ? true : false;
+            $islast = ($userscount == 0 && $i == $rolescount) ? true : false;
             $users = get_role_users($roleid, $this->page->context, false, 'u.*');
             foreach ($users as $user) {
                 $this->content->text .= $this->render_user($user, $key, $islast);
                 $this->usersdisplayed[$user->username] = $user;
             }
             unset($users);
+
+            $i++;
         }
     }
 
@@ -166,7 +169,7 @@ class block_mooprofile extends block_base
             if ($this->can_display('isonline', $key)) {
 
                 $timetoshowusers = 300;
-                $timefrom = 100 * floor((time()-$timetoshowusers) / 100);
+                $timefrom = 100 * floor((time() - $timetoshowusers) / 100);
                 if ($user->lastaccess > $timefrom) {
                     $output .= '<img src="' . $OUTPUT->pix_url('i/user') . '" alt="' . $this->helper->get_string('online') . '" title="' . $this->helper->get_string('online') . '"/>';
                 }
@@ -239,6 +242,64 @@ class block_mooprofile extends block_base
     }
 
     /**
+     * clean up the block config data from the empty usernames and zero roleid
+     *
+     * @return void
+     */
+    public function cleanup_blockdata($data = null)
+    {
+        if ($data == null) {
+            $data = $this->config;
+        }
+
+        // remove empty usernames from config data
+        $data->user = array_filter($data->user, function ($value) {
+                    return !empty($value) || $value === 0;
+                });
+
+        // remove zero roleid from config data
+        $data->role = array_filter($data->role, function ($value) {
+                    return !empty($value) || $value === 0;
+                });
+
+        // remove un-used display fields and correct the arrays keys
+        $users = $data->role + $data->user;
+        $users2 = array_values($users);
+
+        foreach ($this->displayfields as $field) {
+            $newfield = array();
+            foreach ($data->$field as $key => $value) {
+                if (isset($users[$key])) {
+                    $newfield[array_search($users[$key], $users2)] = $value;
+                }
+            }
+            $data->$field = $newfield;
+        }
+
+        $newrole = array();
+        foreach ($data->role as $key => $value) {
+            $newrole[array_search($value, $users2)] = $value;
+        }
+        $data->role = $newrole;
+
+        $newuser = array();
+        foreach ($data->user as $key => $value) {
+            $newuser[array_search($value, $users2)] = $value;
+        }
+        $data->user = $newuser;
+
+        // update repeat element count
+        $data->repeats = count($users);
+    }
+
+    public function instance_config_save($data, $nolongerused = false)
+    {
+        $this->cleanup_blockdata($data);
+
+        return parent::instance_config_save($data, $nolongerused);
+    }
+
+    /**
      * allow the block to have a configuration page
      *
      * @return boolean
@@ -306,6 +367,7 @@ class block_mooprofile extends block_base
      */
     public function after_install()
     {
+        
     }
 
     /**
@@ -314,5 +376,7 @@ class block_mooprofile extends block_base
      */
     public function before_delete()
     {
+        
     }
+
 }
