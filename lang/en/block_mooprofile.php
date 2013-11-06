@@ -1,6 +1,8 @@
 <?php
 
 $string['pluginname'] = 'MooProfile Block';
+$string['mooprofile:addinstance'] = 'Add a new MooProfile block';
+$string['mooprofile:myaddinstance'] = 'Add a new MooProfile block to My home';
 $string['configheader_users'] = 'Enter Users';
 $string['username'] = 'Username';
 $string['configheader_settings'] = 'Block information';

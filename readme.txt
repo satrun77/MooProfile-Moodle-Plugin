@@ -4,7 +4,7 @@ Author:    Mohamed Alsharaf (mohamed.alsharaf@gmail.com)
 Website:   http://jamandcheese-on-phptoast.com
 Copyright: 2011-2012 Mohamed Alsharaf
 License:   http://www.gnu.org/copyleft/gpl.html
-Version:   1.1.2
+Version:   1.1.3
 
 == Changelog: ==
 1.0.0 - First version
@@ -15,6 +15,7 @@ Version:   1.1.2
            based on their role in that course (e.g list all teachers in a course)
 1.1.1 - Fixed bug unable to delete existing username
 1.1.2 - Fixed bug in block_mooprofile::cleanup_blockdata()
+1.1.3 - Bug fixes
 
 == Installation ==
 1. Copy and paste the folder mooprofile into the blocks directory.

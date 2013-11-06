@@ -58,17 +58,19 @@ class mooprofile_helper
     /**
      * Get list of site roles names
      *
+     * @param context $context
      * @param array $exclude
      * @return array
      */
-    public function get_roles($exclude = array())
+    public function get_roles($context, $exclude = array())
     {
         $return = array();
 
         $roles = get_all_roles();
-        foreach ($roles as $role) {
+        $rolenames = role_fix_names($roles, $context, ROLENAME_ORIGINAL);
+        foreach ($rolenames as $role) {
             if (!in_array($role->id, $exclude)) {
-                $return[$role->id] = $role->name;
+                $return[$role->id] = $role->localname;
             }
         }
 
