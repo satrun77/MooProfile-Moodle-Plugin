@@ -182,8 +182,7 @@ class block_mooprofile extends block_base
 
             // if user setting  - allow everyone to see my email or
             // if only course member and current user in a course member
-            $coursecontext = get_context_instance(CONTEXT_COURSE, $this->page->course->id);
-            if ($user->maildisplay == 1 || ($user->maildisplay == 2 && is_enrolled($coursecontext, $USER, '', true))) {
+            if ($user->maildisplay == 1 || ($user->maildisplay == 2 && enrol_sharing_course($user, $USER))) {
                 $output .= '<div class="email">';
                 $output .= '<img src="' . $OUTPUT->pix_url('i/email') . '" alt="' . get_string('email') . '"/><span>' . obfuscate_mailto($user->email, '') . '<span>';
                 if ($this->can_display('sendmessage', $key)) {
