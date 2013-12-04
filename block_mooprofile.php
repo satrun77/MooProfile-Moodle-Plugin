@@ -198,14 +198,11 @@ class block_mooprofile extends block_base
             $output .= '</div>';
         }
 
-        if ($this->can_display('phone1', $key) && $user->phone1 != '') {
+        $phones = $this->get_user_phones($user, $key);
+        if (!empty($phones)) {
             $output .= '<div class="phone">';
-            $output .= '<img src="' . $OUTPUT->pix_url('i/feedback') . '" alt="' . get_string('phone') . '"/><strong>' . get_string('phone') . ':</strong><span>' . s($user->phone1) . '<span>';
-
-            if ($this->can_display('phone2', $key) && $user->phone2 != '') {
-                $output .= '<strong>' . $this->helper->get_string('or') . '</strong><span>' . s($user->phone2) . '<span>';
-            }
-
+            $output .= '<img src="' . $OUTPUT->pix_url('i/feedback') . '" alt="' . get_string('phone') . '"/><strong>' . get_string('phone') . ':</strong>';
+            $output .= '<span>' . join('</span><strong> ' . $this->helper->get_string('or') . '</strong><span>', $phones) . '</span>';
             $output .= '</div>';
         }
 
@@ -239,6 +236,25 @@ class block_mooprofile extends block_base
         }
 
         return true;
+    }
+
+    /**
+     * Get an array of user phone numbers to be displayed.
+     *
+     * @param object $user
+     * @param int $key
+     * @return array
+     */
+    protected function get_user_phones($user, $key)
+    {
+        $phones = array();
+        if ($this->can_display('phone1', $key) && $user->phone1 != '') {
+            $phones[] = s($user->phone1);
+        }
+        if ($this->can_display('phone2', $key) && $user->phone2 != '') {
+            $phones[] = s($user->phone2);
+        }
+        return $phones;
     }
 
     /**
