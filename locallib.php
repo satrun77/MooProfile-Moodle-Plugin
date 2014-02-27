@@ -66,7 +66,7 @@ class mooprofile_helper
     {
         $return = array();
 
-        $roles = get_all_roles();
+        $roles = get_all_roles($context);
         $rolenames = role_fix_names($roles, $context, ROLENAME_ORIGINAL);
         foreach ($rolenames as $role) {
             if (!in_array($role->id, $exclude)) {

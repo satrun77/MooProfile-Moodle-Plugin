@@ -36,7 +36,7 @@ class block_mooprofile_edit_form extends block_edit_form
         $mform->addElement('textarea', 'config_message', $helper->get_string('displaymessage'), array('rows' => '5', 'cols' => '60'));
 
         $roles = $helper->get_roles($this->page->context);
-        array_unshift($roles, get_string('choosedots'));
+        $roles = array(0 => get_string('choosedots')) + $roles;
 
         $repeatarray = array(
             $mform->createElement('header', 'headerconfiguser', $helper->get_string('configheader_user')),
