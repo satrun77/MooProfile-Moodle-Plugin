@@ -19,7 +19,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class block_mooprofile extends block_base
 {
-
     protected $helper;
     protected $usersdisplayed;
     protected $displayfields = array('name', 'picture', 'email', 'sendmessage', 'phone1', 'phone2', 'lastaccess', 'isonline');
@@ -29,7 +28,7 @@ class block_mooprofile extends block_base
         global $CFG;
 
         include_once realpath(dirname(__FILE__)) . '/locallib.php';
-        $this->helper = new mooprofile_helper;
+        $this->helper = new mooprofile_helper();
         $this->title = $this->helper->get_string('pluginname');
         $this->usersdisplayed = array();
     }
@@ -53,7 +52,7 @@ class block_mooprofile extends block_base
             return '';
         }
 
-        $this->content = new stdClass;
+        $this->content = new stdClass();
         $this->content->text = '<div class="mooprofileblock">';
 
         if ($this->config->message != '') {
@@ -142,44 +141,104 @@ class block_mooprofile extends block_base
     /**
      * Render a user block details
      *
-     * @global core_renderer $OUTPUT
-     * @global object $USER
-     * @param object $user
-     * @param int $key
-     * @param boolean $islast
+     * @param  object  $user
+     * @param  int     $key
+     * @param  boolean $islast
      * @return string
      */
     protected function render_user($user, $key, $islast = false)
     {
-        global $OUTPUT, $USER, $CFG;
-
         $output = '<div class="mooprofile' . ($islast ? ' last' : '') . '" id="mooprofile-' . $user->id . '">';
 
-        if ($this->can_display('picture', $key)) {
-            $output .= '<div class="picture">';
-            $output .= $OUTPUT->user_picture($user, array(
-                'courseid' => $this->page->course->id,
-                'size' => '100',
-                'class' => 'profilepicture'));
-            $output .= '</div>';
+        $output .= $this->render_user_picture($user, $key);
+        $output .= $this->render_user_name($user, $key);
+        $output .= $this->render_user_email($user, $key);
+        $output .= $this->render_user_phones($user, $key);
+        $output .= $this->render_user_lastaccess($user, $key);
+
+        $output .= '</div>';
+
+        return $output;
+    }
+
+    /**
+     * Render a user picture
+     *
+     * @global core_renderer $OUTPUT
+     * @param  object  $user
+     * @param  int     $key
+     * @param  boolean $islast
+     * @return string
+     */
+    protected function render_user_picture($user, $key)
+    {
+        global $OUTPUT;
+        $output = '';
+
+        if (!$this->can_display('picture', $key)) {
+            return $output;
         }
 
-        if ($this->can_display('name', $key)) {
-            $output .= '<div class="fullname"><a href="' . $CFG->wwwroot . '/user/profile.php?id=' . $user->id . '">' . fullname($user) . '</a>';
-            if ($this->can_display('isonline', $key)) {
+        $output .= '<div class="picture">';
+        $output .= $OUTPUT->user_picture($user, array(
+            'courseid' => $this->page->course->id,
+            'size'     => '100',
+            'class'    => 'profilepicture'));
+        $output .= '</div>';
 
-                $timetoshowusers = 300;
-                $timefrom = 100 * floor((time() - $timetoshowusers) / 100);
-                if ($user->lastaccess > $timefrom) {
-                    $output .= '<img src="' . $OUTPUT->pix_url('i/user') . '" alt="' . $this->helper->get_string('online') . '" title="' . $this->helper->get_string('online') . '"/>';
-                }
+        return $output;
+    }
+
+    /**
+     * Render a user full name
+     *
+     * @global core_renderer $OUTPUT
+     * @global object $CFG
+     * @param  object  $user
+     * @param  int     $key
+     * @param  boolean $islast
+     * @return string
+     */
+    protected function render_user_name($user, $key)
+    {
+        global $OUTPUT, $CFG;
+        $output = '';
+
+        if (!$this->can_display('name', $key)) {
+            return $output;
+        }
+
+        $output .= '<div class="fullname"><a href="' . $CFG->wwwroot . '/user/profile.php?id=' . $user->id . '">' . fullname($user) . '</a>';
+        if ($this->can_display('isonline', $key)) {
+            $timetoshowusers = 300;
+            $timefrom = 100 * floor((time() - $timetoshowusers) / 100);
+            if ($user->lastaccess > $timefrom) {
+                $output .= '<img src="' . $OUTPUT->pix_url('i/user') . '" alt="' . $this->helper->get_string('online') . '" title="' . $this->helper->get_string('online') . '"/>';
             }
-            $output .= '</div>';
         }
+        $output .= '</div>';
+
+        return $output;
+    }
+
+    /**
+     * Render a user picture
+     *
+     * @global core_renderer $OUTPUT
+     * @global object $USER
+     * @global object $CFG
+     * @param  object  $user
+     * @param  int     $key
+     * @param  boolean $islast
+     * @return string
+     */
+    protected function render_user_email($user, $key)
+    {
+        global $OUTPUT, $USER, $CFG;
+        $output = '';
 
         // don't show email if user setting is hide email from everyone
         if ($this->can_display('email', $key) && $user->maildisplay != 0) {
-
             // if user setting  - allow everyone to see my email or
             // if only course member and current user in a course member
             if ($user->maildisplay == 1 || ($user->maildisplay == 2 && enrol_sharing_course($user, $USER))) {
@@ -190,12 +249,29 @@ class block_mooprofile extends block_base
                 }
                 $output .= '</div>';
             }
-        } else if ($this->can_display('sendmessage', $key)) {
+        } elseif ($this->can_display('sendmessage', $key)) {
             $output .= '<div class="email">';
             $output .= '<img src="' . $OUTPUT->pix_url('i/email') . '" alt="' . get_string('email') . '"/>';
             $output .= '<span><a href="' . $CFG->wwwroot . '/message/index.php?id=' . $user->id . '" target="_blank">' . $this->helper->get_string('sendmessage') . '</a></span>';
             $output .= '</div>';
         }
+
+        return $output;
+    }
+
+    /**
+     * Render a user picture
+     *
+     * @global core_renderer $OUTPUT
+     * @param  object  $user
+     * @param  int     $key
+     * @param  boolean $islast
+     * @return string
+     */
+    protected function render_user_phones($user, $key)
+    {
+        global $OUTPUT;
+        $output = '';
 
         $phones = $this->get_user_phones($user, $key);
         if (!empty($phones)) {
@@ -205,13 +281,26 @@ class block_mooprofile extends block_base
             $output .= '</div>';
         }
 
+        return $output;
+    }
+
+    /**
+     * Render a user picture
+     *
+     * @param  object  $user
+     * @param  int     $key
+     * @param  boolean $islast
+     * @return string
+     */
+    protected function render_user_lastaccess($user, $key)
+    {
+        $output = '';
+
         if ($this->can_display('lastaccess', $key) && $user->lastaccess != '') {
             $output .= '<div class="lastaccess">';
             $output .= '<strong>' . get_string('lastaccess') . '</strong><span>' . format_time($user->lastaccess) . '<span>';
             $output .= '</div>';
         }
-
-        $output .= '</div>';
 
         return $output;
     }
@@ -219,8 +308,8 @@ class block_mooprofile extends block_base
     /**
      * Checks if a configuration settings is enabled or not for a user
      *
-     * @param int $key
-     * @param string $name
+     * @param  string  $name
+     * @param  int     $key
      * @return boolean
      */
     protected function can_display($name, $key = 0)
@@ -240,8 +329,8 @@ class block_mooprofile extends block_base
     /**
      * Get an array of user phone numbers to be displayed.
      *
-     * @param object $user
-     * @param int $key
+     * @param  object $user
+     * @param  int    $key
      * @return array
      */
     protected function get_user_phones($user, $key)
@@ -253,6 +342,7 @@ class block_mooprofile extends block_base
         if ($this->can_display('phone2', $key) && $user->phone2 != '') {
             $phones[] = s($user->phone2);
         }
+
         return $phones;
     }
 
@@ -277,13 +367,13 @@ class block_mooprofile extends block_base
 
         // remove empty usernames from config data
         $data->user = array_filter($data->user, function ($value) {
-                    return !empty($value) || $value === 0;
-                });
+            return !empty($value) || $value === 0;
+        });
 
         // remove zero roleid from config data
         $data->role = array_filter($data->role, function ($value) {
-                    return !empty($value) || $value === 0;
-                });
+            return !empty($value) || $value === 0;
+        });
 
         // remove un-used display fields and correct the arrays keys
         $users = $data->role + $data->user;
@@ -390,7 +480,7 @@ class block_mooprofile extends block_base
      */
     public function after_install()
     {
-        
+
     }
 
     /**
@@ -399,7 +489,7 @@ class block_mooprofile extends block_base
      */
     public function before_delete()
     {
-        
+
     }
 
 }
