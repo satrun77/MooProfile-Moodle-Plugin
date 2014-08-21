@@ -23,8 +23,6 @@ class block_mooprofile_edit_form extends block_edit_form
 {
     protected function specific_definition($mform)
     {
-        global $CFG, $DB;
-
         include_once realpath(dirname(__FILE__)) . '/locallib.php';
         $helper = new mooprofile_helper();
 

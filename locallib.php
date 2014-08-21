@@ -24,7 +24,7 @@ class mooprofile_helper
 
     /**
      * Return string from the block language
-     * 
+     *
      * @param string $name
      * @param object $a
      */
@@ -35,7 +35,7 @@ class mooprofile_helper
 
     /**
      * Return block unique name
-     * 
+     *
      * @return string
      */
     public function get_name()
@@ -45,21 +45,22 @@ class mooprofile_helper
 
     /**
      * Return the directory path of the block
-     * 
+     *
      * @global object $CFG
      * @return string
      */
     public function get_dirpath()
     {
         global $CFG;
+
         return $CFG->dirroot . '/blocks/' . $this->name . '/';
     }
 
     /**
      * Get list of site roles names
      *
-     * @param context $context
-     * @param array $exclude
+     * @param  context $context
+     * @param  array   $exclude
      * @return array
      */
     public function get_roles($context, $exclude = array())
