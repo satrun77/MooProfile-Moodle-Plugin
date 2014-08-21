@@ -167,7 +167,6 @@ class block_mooprofile extends block_base
      * @global core_renderer $OUTPUT
      * @param  object  $user
      * @param  int     $key
-     * @param  boolean $islast
      * @return string
      */
     protected function render_user_picture($user, $key)
@@ -196,7 +195,6 @@ class block_mooprofile extends block_base
      * @global object $CFG
      * @param  object  $user
      * @param  int     $key
-     * @param  boolean $islast
      * @return string
      */
     protected function render_user_name($user, $key)
@@ -229,7 +227,6 @@ class block_mooprofile extends block_base
      * @global object $CFG
      * @param  object  $user
      * @param  int     $key
-     * @param  boolean $islast
      * @return string
      */
     protected function render_user_email($user, $key)
@@ -265,7 +262,6 @@ class block_mooprofile extends block_base
      * @global core_renderer $OUTPUT
      * @param  object  $user
      * @param  int     $key
-     * @param  boolean $islast
      * @return string
      */
     protected function render_user_phones($user, $key)
@@ -289,7 +285,6 @@ class block_mooprofile extends block_base
      *
      * @param  object  $user
      * @param  int     $key
-     * @param  boolean $islast
      * @return string
      */
     protected function render_user_lastaccess($user, $key)
