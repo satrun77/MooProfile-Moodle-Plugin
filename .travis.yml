@@ -31,4 +31,10 @@ before_script:
  - php admin/tool/phpunit/cli/init.php
 
 script:
- - vendor/bin/behat --config /home/travis/bht_moodledata/behat/behat.yml --tags @block_mooprofile && vendor/bin/phpunit --group block_mooprofile
+ - vendor/bin/behat --config /home/travis/bht_moodledata/behat/behat.yml --tags @block_mooprofile && vendor/bin/phpunit --coverage-clover=coverage.clover -c blocks/mooprofile
+
+after_script:
+  - mv coverage.clover blocks/mooprofile/coverage.clover
+  - cd blocks/mooprofile
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
