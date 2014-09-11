@@ -34,6 +34,16 @@ class block_mooprofile extends block_base
     }
 
     /**
+     * Get an array of display fields
+     *
+     * @return array
+     */
+    public function get_displayfields()
+    {
+        return $this->displayfields;
+    }
+
+    /**
      * Display the content of a block
      *
      * @global moodle_database $DB
@@ -165,8 +175,8 @@ class block_mooprofile extends block_base
      * Render a user picture
      *
      * @global core_renderer $OUTPUT
-     * @param  object  $user
-     * @param  int     $key
+     * @param  object $user
+     * @param  int    $key
      * @return string
      */
     protected function render_user_picture($user, $key)
@@ -193,8 +203,8 @@ class block_mooprofile extends block_base
      *
      * @global core_renderer $OUTPUT
      * @global object $CFG
-     * @param  object  $user
-     * @param  int     $key
+     * @param  object $user
+     * @param  int    $key
      * @return string
      */
     protected function render_user_name($user, $key)
@@ -225,8 +235,8 @@ class block_mooprofile extends block_base
      * @global core_renderer $OUTPUT
      * @global object $USER
      * @global object $CFG
-     * @param  object  $user
-     * @param  int     $key
+     * @param  object $user
+     * @param  int    $key
      * @return string
      */
     protected function render_user_email($user, $key)
@@ -260,8 +270,8 @@ class block_mooprofile extends block_base
      * Render a user picture
      *
      * @global core_renderer $OUTPUT
-     * @param  object  $user
-     * @param  int     $key
+     * @param  object $user
+     * @param  int    $key
      * @return string
      */
     protected function render_user_phones($user, $key)
@@ -283,8 +293,8 @@ class block_mooprofile extends block_base
     /**
      * Render a user picture
      *
-     * @param  object  $user
-     * @param  int     $key
+     * @param  object $user
+     * @param  int    $key
      * @return string
      */
     protected function render_user_lastaccess($user, $key)
