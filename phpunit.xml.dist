@@ -30,6 +30,7 @@
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory>.</directory>
             <exclude>
+                <directory>tests/</directory>
                 <directory>db/</directory>
                 <directory>lang/</directory>
                 <file>version.php</file>
