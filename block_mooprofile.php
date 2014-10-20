@@ -358,7 +358,7 @@ class block_mooprofile extends block_base
      */
     public function cleanup_blockdata($data = null)
     {
-        if ($data == null) {
+        if ($data === null) {
             $data = $this->config;
         }
 
