@@ -6,14 +6,14 @@ Feature: I can display profiles by role
 
   @javascript
   Scenario: Display profile block for teachers in a course
-    Given the following "courses" exists:
+    Given the following "courses" exist:
         | fullname | shortname | category |
         | Course 1 | C1 | 0 |
-      And the following "users" exists:
+      And the following "users" exist:
         | username | firstname | lastname | email |
         | teacher1 | Teacher | First | teacher1@asd.com |
         | student1 | Student | First | student1@asd.com |
-     And the following "course enrolments" exists:
+     And the following "course enrolments" exist:
         | user | course | role |
         | teacher1 | C1 | editingteacher |
         | student1 | C1 | student |
@@ -23,7 +23,7 @@ Feature: I can display profiles by role
      And I add the "MooProfile Block" block
      And I open the "MooProfile Block" blocks action menu
      And I follow "Configure MooProfile Block block"
-     And I fill the moodle form with:
+     And I set the following fields to these values:
        | Block Title     | Course Teacher |
        | or Role         | 3              |
        | Display name    | Yes            |
