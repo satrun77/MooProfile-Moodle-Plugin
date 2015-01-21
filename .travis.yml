@@ -26,8 +26,8 @@ before_script:
  - sh -c "if [ '$DB' = 'pgsql' ]; then sed -i s/\'username\'/\'postgres\'/ config.php; fi"
  - mkdir -m777 $HOME/moodledata
  - "(php -S localhost:8000 &) 2> /dev/null > /dev/null"
- - "wget http://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar"
- - "(java -jar selenium-server-standalone-2.42.2.jar &) 2> /dev/null > /dev/null"
+ - "wget http://selenium-release.storage.googleapis.com/2.44/selenium-server-standalone-2.44.0.jar"
+ - "(java -jar selenium-server-standalone-2.44.0.jar &) 2> /dev/null > /dev/null"
  - sleep 5
  - php admin/tool/behat/cli/init.php
  - php admin/tool/phpunit/cli/init.php
