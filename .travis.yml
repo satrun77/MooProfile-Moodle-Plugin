@@ -11,6 +11,7 @@ php:
 env:
  - DB=pgsql MOODLE_VERSION=MOODLE_26_STABLE
  - DB=pgsql MOODLE_VERSION=MOODLE_27_STABLE
+ - DB=pgsql MOODLE_VERSION=MOODLE_28_STABLE
 
 before_script:
  - git clone git://github.com/moodle/moodle ../${MOODLE_VERSION} && cd ../${MOODLE_VERSION}
