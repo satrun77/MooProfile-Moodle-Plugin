@@ -22,15 +22,14 @@ before_script:
  - composer self-update
  - mv ../MooProfile-Moodle-Plugin blocks/mooprofile
  - cp config-dist.php config.php
- - sh -c "sed -i -e s/'password'/''/ -e s/example.com/localhost/ -e s%192.168.1.250%localhost% -e s%/home/example%$HOME% -e 's%\(\$CFG.*bht\)%\n\1%' -e 's%\(\$CFG.*behat_wwwroot.*http://127\)%\n\1%' config.php"
- - sh -c "sed -i -e s/'password'/''/ -e s/example.com/localhost/ -e s%/home/example%$HOME% -e 's%\(\$CFG.*phpu\)%\n\1%' config.php"
+ - sh -c "sed -i -e s/'password'/''/ -e s/example.com/localhost/ -e s%192.168.1.250%localhost% -e s%127.0.0.1/moodle%localhost:8000% -e s%/home/example%$HOME% -e 's%\(\$CFG.*bht\)%\n\1%' -e 's%\(\$CFG.*behat_wwwroot.*http://localhost:8000\)%\n\1%' config.php"  
+ - sh -c "sed -i -e s%/home/example%$HOME% -e 's%\(\$CFG.*phpu\)%\n\1%' config.php"
  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database moodle;' -U postgres; fi"
  - sh -c "if [ '$DB' = 'pgsql' ]; then sed -i s/\'username\'/\'postgres\'/ config.php; fi"
  - mkdir -m777 $HOME/moodledata
  - "(php -S localhost:8000 &) 2> /dev/null > /dev/null"
- - "wget http://selenium-release.storage.googleapis.com/2.44/selenium-server-standalone-2.44.0.jar"
- - "(java -jar selenium-server-standalone-2.44.0.jar &) 2> /dev/null > /dev/null"
- - sleep 5
+ - "wget http://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar"
+ - "(java -jar selenium-server-standalone-2.42.2.jar &) 2> /dev/null > /dev/null"
  - php admin/tool/behat/cli/init.php
  - php admin/tool/phpunit/cli/init.php
 
