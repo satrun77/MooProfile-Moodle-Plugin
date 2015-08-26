@@ -1,7 +1,7 @@
 # MooProfile "Block Plugin"
 
 - Author:    Mohamed Alsharaf (mohamed.alsharaf@gmail.com)
-- Website:   http://jamandcheese-on-phptoast.com
+- Website:   http://my.geek.nz
 - Copyright: 2011-2012 Mohamed Alsharaf
 - License:   http://www.gnu.org/copyleft/gpl.html
 - Version:   1.1.5
